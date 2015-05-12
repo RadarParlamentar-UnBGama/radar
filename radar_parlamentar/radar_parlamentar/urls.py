@@ -56,6 +56,8 @@ urlpatterns = patterns(
         'radar_parlamentar.views.genero_futuro'),
     url(r'^genero/tematica/nuvem/$',
         'radar_parlamentar.views.genero_termos_nuvem'),
+    url(r'^genero/tematica/timeline_feminina/$',
+        'radar_parlamentar.views.genero_timeline'),
 
     # Serivço que retorna conteúdo para plotar o mapa
     url(r'^analises/analise/(?P<nome_curto_casa_legislativa>\w*)/$',

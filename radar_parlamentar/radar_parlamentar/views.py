@@ -91,6 +91,9 @@ def genero_perfil_legis(request):
     return render_to_response('perfil_legis.html', {},
                               context_instance=RequestContext(request))
 
+def genero_timeline(request):
+    return render_to_response('genero_timeline.html', {},
+                              context_instance=RequestContext(request))
 
 def dados_utilizados(request):
     dump_file_path = finders.find('db-dump/radar.sql')

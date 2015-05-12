@@ -1,0 +1,40 @@
+{%extends "base.html"%}
+
+{% block title %}
+   Gênero
+{% endblock title %}
+
+{% block extrahead %}
+{% endblock extrahead %}
+
+{% block headerImgClass %}
+    about
+{% endblock headerImgClass %}
+
+{% block nomepagina %}
+    Gênero e Participação
+{% endblock nomepagina %}
+
+{% block pagedesc %}
+    Entenda visualmente participação de mulheres e homens na política
+{% endblock pagedesc %}
+
+{% block breadcrumbs %}
+    <li><a href="/index/">Home</a> &raquo;</li>
+    <li><a href="/genero/">Gênero</a> &raquo;</li>
+    <li><a href="/genero/tematica/timeline_feminina/">Timeline das Deputadas</a></li>
+{% endblock breadcrumbs %}
+
+{% block content %}
+    <h2>Timeline das Deputadas</h2>
+    <article id="descricao" class="inwrap">
+        Bem vindo a Timeline das Deputadas! Nela você poderá acompanhar, cronologicamente,
+        a entrada das deputadas no nosso governo. Basta seguir pela linha do tempo horizontal
+        e selecionar o perfil de interesse.
+    </article>
+    <iframe src='http://cdn.knightlab.com/libs/timeline/latest/embed/index.html?source=0Aipec4TunR69dG5PMndxN3hqT016T0VZbmozQzk4OHc&font=Bevan-PotanoSans&maptype=toner&lang=pt-br&height=650' width='100%' height='650' frameborder='0'></iframe>
+{% endblock content %}
+
+{% block extrascriptsend %}
+    menuActive("genero");
+{% endblock extrascriptsend %}
