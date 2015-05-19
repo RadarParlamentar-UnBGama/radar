@@ -11,6 +11,7 @@ import gdata.spreadsheet
 import getopt
 import sys
 import datetime
+import re
 
 # A classe realiza a exportacao dos dados das biografias das deputadas para
 # 		uma planilha na conta inserida no console
@@ -117,7 +118,7 @@ class ExportadorGoogleSpreadsheet:
 
 					legislatura	= data_record.find('LEGISLATURAS').text
 					dates 		= self.__split_date(legislatura)
-					start_date 	= '1/1/' + dates[0]
+					start_date 	= self.__search_start_date(mandato)
 					end_date	= '1/1/' + dates[1]
 
 					row_data	= 'startdate='+start_date+';enddate='+end_date+';headline='+nome_parlamentar+';text=Partido: '+ sig_partido + ' Mandato: ' + mandato
@@ -136,8 +137,12 @@ class ExportadorGoogleSpreadsheet:
 	    if isinstance(entry, gdata.spreadsheet.SpreadsheetsList):
 	    	print self.OKBLUE + '::INSERT:: ID > ' + debug_id_cadastro + self.ENDC
 
+	# Procura dentro de mandato a data de posse
+	def __search_start_date(self, mandato):
+		date = re.search('([0]?[1-9]|[1|2][0-9]|[3][0|1])[./-]([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})',mandato)
+		return date.group(0)
+
 	# Separa os periodos das legislaturas
-	# Atualmente apenas pega a primeira legislatura
 	def __split_date(self, date):
 		date = date.replace(" ","")
 		if 'e' in date:
