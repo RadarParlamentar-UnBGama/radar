@@ -63,33 +63,33 @@ class ExportadorGoogleSpreadsheet:
 				has_timeline_deputadas = True
 				id_part = feed.entry[i].id.text.split('/')
 				self.curr_key = id_part[len(id_part) - 1]
-				print self.OKGREEN + 'Spreadsheet %s found!' % entry.title.text + self.ENDC
+				print self.OKGREEN + 'Spreadsheet %s encontrado!' % entry.title.text + self.ENDC
 
 		if not has_timeline_deputadas:
-			print self.FAIL + 'Has no Spreadsheet named "timeline_deputadas"!'
-			print 'Please make sure that the file exists on account "%s"' % self.gd_client.email + self.ENDC
+			print self.FAIL + 'Nao existe Spreadsheet com o nome "timeline_deputadas"!'
+			print 'Por favor tenha certeza de que existe um arquivo na conta "%s"' % self.gd_client.email + self.ENDC
 			exit(2)
 
 	# Procura pelo worksheet "timeline" do spreadsheet
 	def __get_worksheet(self):
-		print 'Searching for your worksheet...'
+		print 'Buscando worksheet...'
 		feed = self.gd_client.GetWorksheetsFeed(self.curr_key)
 		for i, entry in enumerate(feed.entry):
 			if entry.title.text == "timeline":
 				id_part = feed.entry[i].id.text.split('/')
 				self.wksht_id = id_part[len(id_part) - 1]
-				print self.OKGREEN + 'Worksheet %s found!' % entry.title.text + self.ENDC
+				print self.OKGREEN + 'Worksheet %s encontrado!' % entry.title.text + self.ENDC
 
 	# Configura spreadsheet inicial para timeline
 	# Adiciona a primera linha com os identificadores da coluna
 	def __set_worksheet_timeline(self):
-		print 'Setting up spreadsheet for timeline'
+		print 'Configurando spreadsheet para a timeline'
 		col_label = ["startdate", "enddate", "headline",
 		"text", "media", "mediacredit", "mediacaption",
 		"mediathumbnail", "type", "tag"]
 		for i in range(1,11): # Percorre a lista col_label
 			self.__update_cell(1, i, col_label[i-1])
-		print 'Finish setting up!'
+		print 'Configuracao completa!'
 
 	# Update celula especifica
 	def __update_cell(self, row, col, inputValue):
@@ -104,7 +104,7 @@ class ExportadorGoogleSpreadsheet:
 	# A biografia contem: Nome da parlamentar, mandato, partido
 	def __set_biography(self):
 
-		print self.WARNING + 'Searching for Deputadas...' + self.ENDC
+		print self.WARNING + 'Procurando por Deputadas...' + self.ENDC
 		has_deputada = False
 		for data_record in self.root_tree.findall('DATA_RECORD'):
 			try:
@@ -128,14 +128,17 @@ class ExportadorGoogleSpreadsheet:
 				print self.FAIL + '::FAIL:: ID ' + data_record.find('IDECADASTRO').text + ' - Doent have INDSEXO! Moving on...' + self.ENDC
 				pass
 		if not has_deputada:
-			print self.WARNING + 'Has no Deputada!' + self.ENDC
+			print self.WARNING + 'Nao existe Deputada!' + self.ENDC
 
 	# Insere uma linha nova, caso nao encontre nenhuma vazia, com os dados 'row_data'
 	def __insert_row(self, row_data, debug_id_cadastro):
-	    entry = self.gd_client.InsertRow(self.__dictionary_maker(row_data),
-	    	self.curr_key, self.wksht_id)
-	    if isinstance(entry, gdata.spreadsheet.SpreadsheetsList):
-	    	print self.OKBLUE + '::INSERT:: ID > ' + debug_id_cadastro + self.ENDC
+		dictionary = self.__dictionary_maker(row_data)
+		if not self.__is_duplicated(dictionary["headline"]):
+			entry = self.gd_client.InsertRow(dictionary, self.curr_key, self.wksht_id)
+			if isinstance(entry, gdata.spreadsheet.SpreadsheetsList):
+				print self.OKBLUE + '::INSERT:: ID > ' + debug_id_cadastro + self.ENDC
+		else:
+			print '::DUPLICADO:: ID > ' + debug_id_cadastro 
 
 	# Procura dentro de mandato a data de posse
 	def __search_start_date(self, mandato):
@@ -164,6 +167,14 @@ class ExportadorGoogleSpreadsheet:
 			temp = param.split('=')
 			dict[temp[0]] = temp[1]
 		return dict
+
+	def __is_duplicated(self, headline):
+		feed = self.gd_client.GetCellsFeed(self.curr_key, self.wksht_id)
+		result = False
+		for i,entry in enumerate(feed.entry):
+			if entry.content.text == headline:
+				result = True
+		return result
 
 	# Metodo responsavel pela sequencia de execucao da classe
 	def run(self):
