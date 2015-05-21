@@ -17,8 +17,6 @@ import re
 # 		uma planilha na conta inserida no console
 # WARNING: a planilha que sera alterada deve conter o nome especifico 'timeline_deputadas'
 # 		e a aba deve ter o nome 'timeline'
-# TODO: metodo para evitar inserir palarmentar duplicada
-# TODO: colocar o 'start date' com a data de posse
 # TODO: colocar mais dados na biografia
 # TODO: colocar mais peridos de legislatura de uma mesma deputada
 # TODO: metodo para evitar configurar a primeira linha toda vez
@@ -133,7 +131,7 @@ class ExportadorGoogleSpreadsheet:
 	# Insere uma linha nova, caso nao encontre nenhuma vazia, com os dados 'row_data'
 	def __insert_row(self, row_data, debug_id_cadastro):
 		dictionary = self.__dictionary_maker(row_data)
-		if not self.__is_duplicated(dictionary["headline"]):
+		if not self.__is_inserted(dictionary["headline"]):
 			entry = self.gd_client.InsertRow(dictionary, self.curr_key, self.wksht_id)
 			if isinstance(entry, gdata.spreadsheet.SpreadsheetsList):
 				print self.OKBLUE + '::INSERT:: ID > ' + debug_id_cadastro + self.ENDC
@@ -168,11 +166,12 @@ class ExportadorGoogleSpreadsheet:
 			dict[temp[0]] = temp[1]
 		return dict
 
-	def __is_duplicated(self, headline):
+	# Retorna verdadeiro se uma parlamentar ja existe na planilha
+	def __is_inserted(self, headline):
 		feed = self.gd_client.GetCellsFeed(self.curr_key, self.wksht_id)
 		result = False
 		for i,entry in enumerate(feed.entry):
-			if entry.content.text == headline:
+			if entry.content.text.decode('utf-8') == headline:
 				result = True
 		return result
 
