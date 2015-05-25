@@ -23,6 +23,7 @@ from django.test import TestCase
 from exportadores import exportar
 import os
 from modelagem import models
+from exportadores.exportador_google_spreadsheet import ExportadorGoogleSpreadsheet
 
 
 MODULE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -181,3 +182,13 @@ class ExportadoresFileTest(TestCase):
     def test_create_file_voto(self):
         filepath = os.path.join(MODULE_DIR, 'dados/voto.xml')
         self.assertTrue(os.path.isfile(filepath))
+
+class ExportadorGoogleSpreadsheetTest(TestCase):
+
+    def test_dictionary_maker(self):    
+        exportar = ExportadorGoogleSpreadsheet('paulohtfs', 'oijyfgzbaggdjkah', 'exportadores/dados/BIOGRAFIA 1801 - 2900.xml')
+
+        rowdata = "startdate=21/05/2017;enddate=22/06/2017;headline=Jose de Almeida"
+        expected_dictionary = {'startdate':'21/05/2017', 'enddate':'22/06/2017', 'headline':'Jose de Almeida'}
+        dictionary = exportar._ExportadorGoogleSpreadsheet__dictionary_maker(rowdata)
+        self.assertEquals(expected_dictionary, dictionary)
