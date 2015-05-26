@@ -148,13 +148,12 @@ class ExportadorGoogleSpreadsheet:
 		date = date.replace(" ","")
 		if 'e' in date:
 			date = date.split('e')
+			dates = date[0].split('-')
 		elif ',' in date:
 			date = date.split(',')
-
-		if date is list:
-			dates = date.split('-')
-		else:
 			dates = date[0].split('-')
+		else:
+			dates = date.split('-')
 
 		return dates
 

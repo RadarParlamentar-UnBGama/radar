@@ -207,3 +207,19 @@ class ExportadorGoogleSpreadsheetTest(TestCase):
         year_date = self.exportar_spreadsheet._ExportadorGoogleSpreadsheet__split_date(legislatura)
         self.assertEquals(expected_year_date_1, year_date[0])
         self.assertEquals(expected_year_date_2, year_date[1])
+
+    def test_split_year_date_and(self):
+        legislatura = '2009 - 2010 e 2011 - 2014'
+        expected_year_date_1 = '2009'
+        expected_year_date_2 = '2010'
+        year_date = self.exportar_spreadsheet._ExportadorGoogleSpreadsheet__split_date(legislatura)
+        self.assertEquals(expected_year_date_1, year_date[0])
+        self.assertEquals(expected_year_date_2, year_date[1])
+
+    def test_split_year_date_only_one(self):
+        legislatura = '2003 - 2007'
+        expected_year_date_1 = '2003'
+        expected_year_date_2 = '2007'
+        year_date = self.exportar_spreadsheet._ExportadorGoogleSpreadsheet__split_date(legislatura)
+        self.assertEquals(expected_year_date_1, year_date[0])
+        self.assertEquals(expected_year_date_2, year_date[1])
