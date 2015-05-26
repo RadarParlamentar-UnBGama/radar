@@ -151,7 +151,7 @@ class ExportadorGoogleSpreadsheet:
 		elif ',' in date:
 			date = date.split(',')
 
-		if date is not list:
+		if date is list:
 			dates = date.split('-')
 		else:
 			dates = date[0].split('-')

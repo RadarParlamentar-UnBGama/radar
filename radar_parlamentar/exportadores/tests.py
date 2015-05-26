@@ -188,18 +188,22 @@ class ExportadorGoogleSpreadsheetTest(TestCase):
     def setUp(self):
         self.exportar_spreadsheet = ExportadorGoogleSpreadsheet('paulohtfs', 'oijyfgzbaggdjkah', 'exportadores/dados/BIOGRAFIA 1801 - 2900.xml')
 
-
     def test_search_start_date(self):
         mandato = 'O mandato comecou no dia 12/09/2011 quando a candidata iniciou suas atividades'
         expected_date = '12/09/2011'
         date = self.exportar_spreadsheet._ExportadorGoogleSpreadsheet__search_start_date(mandato)
         self.assertEquals(expected_date, date)
 
-
     def test_dictionary_maker(self):    
-
         rowdata = "startdate=21/05/2017;enddate=22/06/2017;headline=Jose de Almeida"
         expected_dictionary = {'startdate':'21/05/2017', 'enddate':'22/06/2017', 'headline':'Jose de Almeida'}
         dictionary = self.exportar_spreadsheet._ExportadorGoogleSpreadsheet__dictionary_maker(rowdata)
         self.assertEquals(expected_dictionary, dictionary)
 
+    def test_split_year_date_comma(self):
+        legislatura = '2008 - 2012, 2012 - 2015'
+        expected_year_date_1 = '2008'
+        expected_year_date_2 = '2012'
+        year_date = self.exportar_spreadsheet._ExportadorGoogleSpreadsheet__split_date(legislatura)
+        self.assertEquals(expected_year_date_1, year_date[0])
+        self.assertEquals(expected_year_date_2, year_date[1])
