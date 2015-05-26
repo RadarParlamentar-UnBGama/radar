@@ -185,10 +185,21 @@ class ExportadoresFileTest(TestCase):
 
 class ExportadorGoogleSpreadsheetTest(TestCase):
 
+    def setUp(self):
+        self.exportar_spreadsheet = ExportadorGoogleSpreadsheet('paulohtfs', 'oijyfgzbaggdjkah', 'exportadores/dados/BIOGRAFIA 1801 - 2900.xml')
+
+
+    def test_search_start_date(self):
+        mandato = 'O mandato comecou no dia 12/09/2011 quando a candidata iniciou suas atividades'
+        expected_date = '12/09/2011'
+        date = self.exportar_spreadsheet._ExportadorGoogleSpreadsheet__search_start_date(mandato)
+        self.assertEquals(expected_date, date)
+
+
     def test_dictionary_maker(self):    
-        exportar = ExportadorGoogleSpreadsheet('paulohtfs', 'oijyfgzbaggdjkah', 'exportadores/dados/BIOGRAFIA 1801 - 2900.xml')
 
         rowdata = "startdate=21/05/2017;enddate=22/06/2017;headline=Jose de Almeida"
         expected_dictionary = {'startdate':'21/05/2017', 'enddate':'22/06/2017', 'headline':'Jose de Almeida'}
-        dictionary = exportar._ExportadorGoogleSpreadsheet__dictionary_maker(rowdata)
+        dictionary = self.exportar_spreadsheet._ExportadorGoogleSpreadsheet__dictionary_maker(rowdata)
         self.assertEquals(expected_dictionary, dictionary)
+
