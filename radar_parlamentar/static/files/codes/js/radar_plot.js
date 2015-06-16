@@ -649,10 +649,38 @@ Plot = (function ($) {
 //            });
 //        }
 
-
         // Retorna partidos excluindo partidos ausentes no período
         function get_partidos_no_periodo(period) {
-            return partidos.filter(function(d){ return d.t[period] > 0;});
+            var partidos_periodo = partidos.filter(function(d){ return d.t[period] > 0;});
+            
+            var partidos_filtrados = [];
+                      
+            for(var contador_partidos = 0; contador_partidos < partidos_periodo.length; contador_partidos++)
+            {
+                if(partidos_filtrados.length == 0)
+                {
+                    partidos_filtrados.push(partidos_periodo[contador_partidos]);
+                }
+                else
+                {
+                    var encontrou_partido_igual = false;
+                    
+                    for(var i = 0; i < partidos_filtrados.length; i++)
+                    {
+                        if(partidos_filtrados[i].nome == partidos_periodo[contador_partidos].nome)
+                        {
+                            encontrou_partido_igual = true;
+                        }    
+                    }
+                    
+                    if(encontrou_partido_igual == false)
+                    {
+                        partidos_filtrados.push(partidos_periodo[contador_partidos]);
+                    }
+                }
+            }
+            
+            return partidos_filtrados;
         }
 
         function get_partidos_ausentes_no_periodo(period) {
